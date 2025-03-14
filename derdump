@@ -19,8 +19,8 @@ else:
 	bg = attr
 
 if len (args) != 1:
-	print 'Usage:  ' + attr ('bold') + sys.argv [0] + '[--colour] file.der' + attr (0)
-	print 'Output: ' + nicemeaning ('MEANING') + ': ' + nicetag ('TAG') + ' ' + nicecontlen ('CONTLEN', 3) + ' ' + nicetagofs ('TAGOFS') + ' ' + nicenesting ('NESTING') + ', ' + niceclass ('CLASS') + ', ' + niceprimconstr ('PRIMCONSTR')
+	print('Usage:  ' + attr ('bold') + sys.argv [0] + '[--colour] file.der' + attr (0))
+	print('Output: ' + nicemeaning ('MEANING') + ': ' + nicetag ('TAG') + ' ' + nicecontlen ('CONTLEN', 3) + ' ' + nicetagofs ('TAGOFS') + ' ' + nicenesting ('NESTING') + ', ' + niceclass ('CLASS') + ', ' + niceprimconstr ('PRIMCONSTR'))
 	sys.exit (1)
 
 
@@ -120,7 +120,7 @@ def eof ():
 def read1 ():
 	global ofs, der
 	if eof ():
-		print 'ATTEMPTED READ BEYOND EOF (RETURNING 0x00)'
+		print('ATTEMPTED READ BEYOND EOF (RETURNING 0x00)')
 		return 0
 	else:
 		ofs = ofs + 1
@@ -132,7 +132,7 @@ while not eof ():
 
 	while nesting != [] and ofs >= nesting [-1]:
 		if ofs > nesting [-1]:
-			print 'READ OFFSET %d EXCEEDS ENCAPSULATION %d (RETURNING)' % (ofs, nesting [-1])
+			print('READ OFFSET %d EXCEEDS ENCAPSULATION %d (RETURNING)' % (ofs, nesting [-1]))
 		ofs = nesting.pop ()
 
 	tag = read1 ()
@@ -162,17 +162,17 @@ while not eof ():
 	else:
 		meaning = '[PRIVATE ' + str (tag_num) + ']'
 
-	print ('%s%s: %s %s %s %s, %s, %s' % (
+	print(('%s%s: %s %s %s %s, %s, %s' % (
 			'  ' * len (nesting),
 			nicemeaning (meaning), nicetag (tag),
 			nicecontlen (leng, lenlen),
 			nicetagofs (ofs - lenlen - 1),
 			nicenesting (nesting),
 			niceclass (tag_class),
-			niceprimconstr (tag_pc) ) )
+			niceprimconstr (tag_pc) ) ))
 
 	if tag_pc == 0 and leng > 0:
-		print '  ' * ( len (nesting) + 1 ),
+		print('  ' * ( len (nesting) + 1 )),
 		cstr = ''
 		ival = None
 		ostr = ''
@@ -181,7 +181,7 @@ while not eof ():
 		bval = -8
 		while leng > 0:
 			ch = read1 ()
-			print '%02x' % ch,
+			print('%02x' % ch)
 			if 32 <= ch < 127:
 				cstr = cstr + chr (ch)
 			else:
@@ -220,16 +220,16 @@ while not eof ():
 		else:
 			cstr = '"' + attr ('bold') + cstr + attr (0) + '"'
 		if cstr is not None:
-			print '==', cstr
+			print('==', cstr)
 		else:
 			print
 
 	if tag_pc != 0:
-		# print 'Now at', ofs, 'adding', leng, 'pushing', ofs + leng
+		# print('Now at', ofs, 'adding', leng, 'pushing', ofs + leng)
 		nesting.append (ofs + leng)
 
 while nesting != []:
 	if ofs != nesting [-1]:
-		print niceerror ('NESTING NOT ENDED CORRECTLY, OFFSET IS %d INSTEAD OF %d (CONTINUING)' % (ofs, nesting [-1]))
+		print(niceerror ('NESTING NOT ENDED CORRECTLY, OFFSET IS %d INSTEAD OF %d (CONTINUING)' % (ofs, nesting [-1])))
 	nesting.pop ()
 
